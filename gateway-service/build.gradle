@@ -1,0 +1,22 @@
+group 'com.rest.group'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+jar {
+    baseName = 'gateway-service'
+    version =  '0.1.0'
+}
+
+dependencies {
+    compile project(":common-security")
+    compile("com.fasterxml.jackson.core:jackson-databind")
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-data-rest")
+    compile("org.springframework.boot:spring-boot-starter-security")
+    compile group: 'com.google.guava', name: 'guava', version: '11.0.2'
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
