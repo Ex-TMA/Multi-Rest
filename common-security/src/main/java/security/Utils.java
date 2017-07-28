@@ -18,7 +18,7 @@ public class Utils {
 
     private static PasswordEncoder encoder;
     private static final String PROP_CLASS_PATH = "application.properties";
-    private static final String ENCRYPTION_METHOD_PROPERTY = "account.encryption.method.class";
+    private static final String ENCRYPTION_METHOD_PROPERTY = "security.encryption.method.class";
 
     static {
         Resource resource = new ClassPathResource(PROP_CLASS_PATH);
