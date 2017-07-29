@@ -1,5 +1,7 @@
 package security;
 
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.client.RestTemplate;
 import security.model.AuthenticationAccount;
 
@@ -9,21 +11,29 @@ import security.model.AuthenticationAccount;
 public class AuthenticationAccountAuthService {
     private static final String ACCOUNT_URI = "localhost:8081/account";
 
-    public Boolean authenticateAccount(String userName, String pass)
-    {
+    public AuthenticationAccount authenticateAccount(String userName, String pass) {
         AuthenticationAccount account = getAuthenticationAccountFromAccountService(userName);
+
+        if (account == null) {
+            throw new UsernameNotFoundException("Username not found");
+        }
+
         String encodedPass = Utils.encode(pass);
 
-        // TODO possibly add and assign token here
+        if (!account.getPass().equals(encodedPass)) {
+            throw new AuthenticationCredentialsNotFoundException("Authentication failed");
+        }
 
-        return account.getPass().equals(encodedPass);
+        // TODO generate & assign token
+
+        return account;
     }
 
     private AuthenticationAccount getAuthenticationAccountFromAccountService(String userName)
     {
         RestTemplate restTemplateToAccount = new RestTemplate();
         String exactURI = ACCOUNT_URI + "/search/findByUserName?userName=" + userName + "&projection=authenticateAccount";
-        AuthenticationAccount resultAccount = restTemplateToAccount.getForObject(ACCOUNT_URI, AuthenticationAccount.class);
+        AuthenticationAccount resultAccount = restTemplateToAccount.getForObject(exactURI, AuthenticationAccount.class);
         return resultAccount;
     }
 }
