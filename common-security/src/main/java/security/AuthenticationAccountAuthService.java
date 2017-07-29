@@ -18,9 +18,7 @@ public class AuthenticationAccountAuthService {
             throw new UsernameNotFoundException("Username not found");
         }
 
-        String encodedPass = Utils.encode(pass);
-
-        if (!account.getPass().equals(encodedPass)) {
+        if (!Utils.match(pass, account.getPass())) {
             throw new AuthenticationCredentialsNotFoundException("Authentication failed");
         }
 
