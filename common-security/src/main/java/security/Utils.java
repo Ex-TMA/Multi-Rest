@@ -15,6 +15,7 @@ public class Utils {
     static Log log = LogFactory.getLog(Utils.class.getName());
 
     protected static final long DAY = 1000 * 60 * 60 * 24;
+    protected static final String TOKEN_HEADER = "access-token";
 
     private static PasswordEncoder encoder;
     private static KeyBasedPersistenceTokenService tokenService;
