@@ -15,7 +15,7 @@ import java.util.Collection;
 /**
  * Created by truongnguyen on 7/18/17.
  */
-@RepositoryRestResource(collectionResourceRel = "account", path = "account")
+@RepositoryRestResource(collectionResourceRel = "account")
 public interface AccountRepository extends JpaRepository<Account,Long> {
 
     @RestResource
