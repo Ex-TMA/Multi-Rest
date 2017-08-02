@@ -2,4 +2,5 @@ rootProject.name = 'multi-rest'
 include 'account-service'
 include 'gateway-service'
 include 'common-security'
+include 'common-security-web'
 
