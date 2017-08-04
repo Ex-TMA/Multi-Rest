@@ -36,7 +36,7 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
     private TokenAuthenticationService tokenAuthenticationService;
 
     @Autowired
-    AccountAuthService accountAuthService;
+    AccountAuthenticationService accountAuthenticationService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -46,15 +46,15 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
     @Override
     public UserDetailsService userDetailsServiceBean() {
         return userName -> {
-            AuthenticationAccount account = accountAuthService.getAuthenticationAccountFromAccountService(userName);
+            AuthenticationAccount account = accountAuthenticationService.getAuthenticationAccountFromAccountService(userName);
             return new org.springframework.security.core.userdetails.User(userName, account.getPassword(), true, true, true, true,
                     AuthorityUtils.createAuthorityList("USER"));
         };
     }
 
     @Bean
-    public AccountAuthService accountAuthService() {
-        return new AccountAuthService();
+    public AccountAuthenticationService accountAuthService() {
+        return new AccountAuthenticationService();
     }
 
     @Bean

@@ -11,8 +11,8 @@ import org.springframework.security.core.token.Token;
 import org.springframework.security.core.token.TokenService;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import security.AccountAuthService;
-import security.model.AuthAcc;
+import security.AccountAuthenticationService;
+import security.model.AccountCredential;
 import security.model.AuthenticationAccount;
 
 import javax.validation.Valid;
@@ -32,12 +32,12 @@ public class SecurityController {
     private TokenService tokenService;
 
     @Autowired
-    private AccountAuthService customerAuthService;
+    private AccountAuthenticationService customerAuthService;
 
     private static ObjectMapper objectMapper = new ObjectMapper();
 
     @RequestMapping(value = "/login", method = POST)
-    public ResponseEntity<AuthenticationAccount> doAuth(@RequestBody @Valid AuthAcc request) throws IOException {
+    public ResponseEntity<AuthenticationAccount> doAuth(@RequestBody @Valid AccountCredential request) throws IOException {
         AuthenticationAccount customer = customerAuthService.authenticateAccount(request);
 
         Token token = tokenService.allocateToken(objectMapper.writeValueAsString(customer));

@@ -1,29 +1,27 @@
 package security;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
-import security.model.AuthAcc;
+import security.model.AccountCredential;
 import security.model.AuthenticationAccount;
 
 /**
  * Created by nsonanh on 02/08/2017.
  */
-public class AccountAuthService {
+public class AccountAuthenticationService {
     @Autowired
     SecurityProperties securityProperties;
 
     private static final String ACCOUNT_URI = "http://localhost:8081/api/accounts";
     private PasswordEncoder encoder;
 
-    public AccountAuthService() {
+    public AccountAuthenticationService() {
     }
 
-    public AuthenticationAccount authenticateAccount(AuthAcc request) {
+    public AuthenticationAccount authenticateAccount(AccountCredential request) {
         AuthenticationAccount account = getAuthenticationAccountFromAccountService(request.getUserName());
 
         if (account == null) {
@@ -39,7 +37,7 @@ public class AccountAuthService {
     public AuthenticationAccount getAuthenticationAccountFromAccountService(String userName) {
         RestTemplate restTemplateToAccount = new RestTemplate();
         String exactURI = ACCOUNT_URI + "/search/findByUserName?userName=" + userName + "&projection=authenticateAccount";
-        AuthAcc resultAccount = restTemplateToAccount.getForObject(exactURI, AuthAcc.class);
+        AccountCredential resultAccount = restTemplateToAccount.getForObject(exactURI, AccountCredential.class);
         return new AuthenticationAccount(resultAccount.getUserName(), resultAccount.getPass());
     }
 
