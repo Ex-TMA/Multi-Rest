@@ -1,0 +1,8 @@
+# Ignore build content
+build/
+
+# Ignore .idea content
+.idea/
+
+# Ignore .gradle content
+.gradle/
