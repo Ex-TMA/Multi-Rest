@@ -20,10 +20,13 @@ public class TokenAuthenticationService {
     protected static final long DAY = 1000 * 60 * 60 * 24;
     protected static final String TOKEN_HEADER = "access-token";
 
-    @Autowired
     private TokenService tokenService;
 
     private ObjectMapper mapper = new ObjectMapper();
+
+    public void setTokenService(TokenService tokenService) {
+        this.tokenService = tokenService;
+    }
 
     public Authentication getAuthentication(HttpServletRequest request) throws IOException {
         final String tokenString = request.getHeader(TOKEN_HEADER);

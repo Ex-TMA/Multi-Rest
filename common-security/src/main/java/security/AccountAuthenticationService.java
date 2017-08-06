@@ -18,9 +18,6 @@ public class AccountAuthenticationService {
     private static final String ACCOUNT_URI = "http://localhost:8081/api/accounts";
     private PasswordEncoder encoder;
 
-    public AccountAuthenticationService() {
-    }
-
     public AuthenticationAccount authenticateAccount(AccountCredential request) {
         AuthenticationAccount account = getAuthenticationAccountFromAccountService(request.getUserName());
 

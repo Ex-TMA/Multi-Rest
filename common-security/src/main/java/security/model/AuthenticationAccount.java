@@ -46,6 +46,7 @@ public class AuthenticationAccount implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public String getPassword() {
         return pass;
     }
