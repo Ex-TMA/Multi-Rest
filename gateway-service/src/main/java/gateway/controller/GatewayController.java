@@ -84,5 +84,4 @@ public class GatewayController {
       return buffer.lines().collect(Collectors.joining("\n"));
     }
   }
-
 }

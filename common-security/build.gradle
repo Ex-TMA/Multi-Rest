@@ -8,4 +8,10 @@ jar {
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-security")
+    compile("org.springframework.security:spring-security-config")
+    compile("commons-lang:commons-lang:2.6")
+    compile("com.fasterxml.jackson.core:jackson-databind:2.6.6")
+    compile("com.fasterxml.jackson.core:jackson-core")
+    compile("org.springframework.boot:spring-boot-starter-validation")
+    compile("javax.servlet:javax.servlet-api")
 }

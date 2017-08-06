@@ -1,11 +1,15 @@
 package security;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by nsonanh on 30/07/2017.
  */
-@ConfigurationProperties(value = "classpath:application.properties", ignoreUnknownFields = false, prefix = "security")
+@PropertySource(("security.properties"))
+@ConfigurationProperties(prefix = "security")
+@Component
 public class SecurityProperties {
     private String encryptionMethodClass;
     private String serverSecret;
