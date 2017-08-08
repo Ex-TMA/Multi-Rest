@@ -1,2 +1,14 @@
 language: java
-gradle check
+
+jdk:
+  - oraclejdk8
+
+os:
+  - linux
+
+cache:
+  directories:
+  - $HOME/.gradle
+
+script:
+  - gradle check
