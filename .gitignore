@@ -7,5 +7,4 @@ build/
 
 # Ignore .gradle content
 .gradle/
-gradle/
 
