@@ -3,6 +3,8 @@ build/
 
 # Ignore .idea content
 .idea/
+*.iml
 
 # Ignore .gradle content
 .gradle/
+
