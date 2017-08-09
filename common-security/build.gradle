@@ -1,37 +1,3 @@
-//
-//buildscript {
-//    repositories { mavenCentral() }
-//}
-//
-//
-//plugins { id "io.spring.dependency-management" version "1.0.0.RELEASE" }
-//
-//apply plugin: 'java'
-//apply plugin: 'eclipse'
-//
-//group 'com.rest.group'
-//version '1.0-SNAPSHOT'
-//
-//jar {
-//    baseName = 'common-security'
-//    version =  '0.1.0'
-//}
-//
-//
-//ext { springBootVersion = '1.5.6.RELEASE' }
-//
-//
-//
-//dependencies {
-//    compile("org.springframework.boot:spring-boot-starter-security")
-//    compile("org.springframework.security:spring-security-config")
-//    compile("commons-lang:commons-lang:2.6")
-//    compile("com.fasterxml.jackson.core:jackson-databind:2.6.6")
-//    compile("com.fasterxml.jackson.core:jackson-core")
-//    compile("org.springframework.boot:spring-boot-starter-validation")
-//    compile("javax.servlet:javax.servlet-api")
-//}
-
 buildscript {
     repositories { mavenCentral() }
 }
