@@ -1,0 +1,15 @@
+language: java
+
+jdk:
+  - oraclejdk8
+
+os:
+  - linux
+
+cache:
+  directories:
+  - $HOME/.gradle
+
+script:
+  - gradle check
+  - gradle assemble
