@@ -1,14 +1,17 @@
 group 'com.rest.group'
 version '1.0-SNAPSHOT'
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
+buildscript {
+    ext { springBootVersion = '1.5.6.RELEASE' }
+    repositories { mavenCentral() }
+    dependencies { classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") }
+}
+
 apply plugin: 'org.springframework.boot'
 
 jar {
     baseName = 'gateway-service'
-    version =  '0.1.0'
+    version =  '0.1.0-SNAPSHOT'
 }
 
 dependencies {
