@@ -1,17 +1,34 @@
-group 'com.rest.group'
-version '1.0-SNAPSHOT'
+buildscript {
+    repositories { mavenCentral() }
+}
+
+plugins { id "io.spring.dependency-management" version "1.0.0.RELEASE" }
+
+ext { springBootVersion = '1.5.6.RELEASE' }
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
 
 jar {
     baseName = 'common-security'
-    version =  '0.1.0'
+    version = '0.0.1-SNAPSHOT'
 }
+sourceCompatibility = 1.8
+
+repositories { mavenCentral() }
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-security")
-    compile("org.springframework.security:spring-security-config")
+    compile('org.springframework.boot:spring-boot-starter')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compile('org.springframework.boot:spring-boot-starter-security')
     compile("commons-lang:commons-lang:2.6")
     compile("com.fasterxml.jackson.core:jackson-databind:2.6.6")
     compile("com.fasterxml.jackson.core:jackson-core")
-    compile("org.springframework.boot:spring-boot-starter-validation")
-    compile("javax.servlet:javax.servlet-api")
+    testCompile('org.springframework.boot:spring-boot-starter-test')
 }
+
+dependencyManagement {
+    imports { mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}") }
+}
+
+

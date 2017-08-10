@@ -1,9 +1,8 @@
 # Ignore build content
 build/
 
-# Ignore idea content
+# Ignore .idea content
 .idea/
-*.iml
 
 # Ignore .gradle content
 .gradle/
