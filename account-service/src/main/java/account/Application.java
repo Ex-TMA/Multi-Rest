@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class })
-//@Import(CommonConfig.class)
+@Import(CommonConfig.class)
 public class Application {
 
     public static void main(String[] args) {

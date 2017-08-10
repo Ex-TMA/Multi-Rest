@@ -34,15 +34,15 @@ public class Account extends BaseEntity{
     @JoinTable(name = "AccountAccess", joinColumns = { @JoinColumn(name = "accountId") }, inverseJoinColumns = { @JoinColumn(name = "accessId") })
     private List<Access> accesses;
 
-    /*@Autowired
+    @Autowired
     @Transient
-    private Utils utils;*/
+    private Utils utils;
     protected Account() {
     }
 
     public Account(String userName, String pass, AccountState state, String name, String email) {
         this.userName = userName;
-//        this.pass = utils.encode(pass);
+        this.pass = utils.encode(pass);
         this.state = state;
         this.name = name;
         this.email = email;
@@ -62,7 +62,7 @@ public class Account extends BaseEntity{
     }
 
     public void setPass(String pass) {
-        /*this.pass = utils.encode(pass);*/
+        this.pass = utils.encode(pass);
     }
 
     public AccountState getState() {

@@ -18,8 +18,8 @@ public class StartupRunner implements CommandLineRunner {
     private AccountAccessRepository accountAccessRepository;
     @Autowired
     private AccountTokenRepository accountToken;
-   /* @Autowired
-    private Utils utils;*/
+    @Autowired
+    private Utils utils;
 
     @Override
     public void run(String... args) throws Exception {
@@ -31,8 +31,8 @@ public class StartupRunner implements CommandLineRunner {
         acc3.addAccess(access);
         accountRepository.save( acc3 );*/
 
-       /* for(Account acc: accountRepository.findAll()){
+        for(Account acc: accountRepository.findAll()){
             System.out.println("Name: " + acc.getName() + ", match: " + utils.match("password",acc.getPass()));
-        }*/
+        }
     }
 }

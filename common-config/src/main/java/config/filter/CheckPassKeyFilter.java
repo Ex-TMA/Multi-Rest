@@ -21,22 +21,28 @@ import java.io.IOException;
  */
 public class CheckPassKeyFilter extends GenericFilterBean {
     Logger logger = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    private ConfigProperties configProperties;
-    @Autowired
-    private Utils utils;
+
+    private final ConfigProperties configProperties;
+    private final Utils utils;
+
+    public CheckPassKeyFilter(ConfigProperties configProperties, Utils utils) {
+        this.configProperties = configProperties;
+        this.utils = utils;
+    }
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         logger.info("Checking passkey");
         HttpServletRequest request = (HttpServletRequest)req;
         String passkey = request.getHeader(RequestHeader.GATEWAY_PASSKEY);
-        /*if(utils.match(configProperties.getGatewayPasskey(), passkey)){
+        logger.info("Gateway passkey " + passkey);
+        logger.info("Config passkey " + configProperties.getGatewayPasskey());
+        if(utils.match(configProperties.getGatewayPasskey(), passkey)){
             chain.doFilter(req, res);
         }
         else{
             throw new AuthenticationException();
-        }*/
+        }
         chain.doFilter(req, res);
 
     }

@@ -1,5 +1,6 @@
 package gateway.transformer;
 
+import config.RequestHeader;
 import org.apache.http.client.methods.RequestBuilder;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
@@ -22,7 +23,7 @@ public class HeadersRequestTransformer extends ProxyRequestTransformer {
         requestBuilder.addHeader(headerName, headerValue);
       }
     }
-//    requestBuilder.addHeader(RequestHeader.GATEWAY_PASSKEY, "password");
+    requestBuilder.addHeader(RequestHeader.GATEWAY_PASSKEY, "$2a$06$nnGtPHivmQRvBGtffykHAeUsRNoW9.wiUkYJgg8vIXZDQNVbHqfve");
     return requestBuilder;
   }
 }

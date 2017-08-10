@@ -1,5 +1,6 @@
 package gateway.controller;
 
+import config.RequestHeader;
 import gateway.config.ApiGatewayProperties;
 import gateway.transformer.ContentRequestTransformer;
 import gateway.transformer.HeadersRequestTransformer;
