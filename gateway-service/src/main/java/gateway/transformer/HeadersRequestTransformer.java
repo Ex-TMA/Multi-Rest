@@ -22,7 +22,7 @@ public class HeadersRequestTransformer extends ProxyRequestTransformer {
         requestBuilder.addHeader(headerName, headerValue);
       }
     }
-
+//    requestBuilder.addHeader(RequestHeader.GATEWAY_PASSKEY, "password");
     return requestBuilder;
   }
 }

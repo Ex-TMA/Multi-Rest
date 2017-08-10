@@ -10,7 +10,7 @@ apply plugin: 'java'
 apply plugin: 'eclipse'
 
 jar {
-    baseName = 'common-security'
+    baseName = 'common-config'
     version = '0.0.1-SNAPSHOT'
 }
 sourceCompatibility = 1.8
@@ -18,13 +18,9 @@ sourceCompatibility = 1.8
 repositories { mavenCentral() }
 
 dependencies {
-//    compile project(":common-config")
-    compile('org.springframework.boot:spring-boot-starter')
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compile('org.springframework.boot:spring-boot-starter-security')
-    compile("commons-lang:commons-lang:2.6")
-    compile("com.fasterxml.jackson.core:jackson-databind:2.6.6")
-    compile("com.fasterxml.jackson.core:jackson-core")
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-security")
+    compile("javax.servlet:javax.servlet-api")
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 

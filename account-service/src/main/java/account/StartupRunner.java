@@ -1,11 +1,10 @@
 package account;
 
-import account.model.Access;
 import account.model.Account;
-import account.model.AccountState;
 import account.repository.AccountAccessRepository;
 import account.repository.AccountRepository;
 import account.repository.AccountTokenRepository;
+import config.property.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 
@@ -19,6 +18,8 @@ public class StartupRunner implements CommandLineRunner {
     private AccountAccessRepository accountAccessRepository;
     @Autowired
     private AccountTokenRepository accountToken;
+   /* @Autowired
+    private Utils utils;*/
 
     @Override
     public void run(String... args) throws Exception {
@@ -30,8 +31,8 @@ public class StartupRunner implements CommandLineRunner {
         acc3.addAccess(access);
         accountRepository.save( acc3 );*/
 
-        for(Account acc: accountRepository.findAll()){
-            System.out.println("Name: " + acc.getName() + ", match: " + Utils.match("password",acc.getPass()));
-        }
+       /* for(Account acc: accountRepository.findAll()){
+            System.out.println("Name: " + acc.getName() + ", match: " + utils.match("password",acc.getPass()));
+        }*/
     }
 }
