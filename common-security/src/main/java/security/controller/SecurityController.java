@@ -1,7 +1,6 @@
 package security.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import security.model.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import security.AccountAuthenticationService;
 import security.model.AccountCredential;
 import security.model.AuthenticationAccount;
+import security.model.ErrorResponse;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 
@@ -34,11 +35,14 @@ public class SecurityController {
     @Autowired
     private AccountAuthenticationService customerAuthService;
 
+    private static final String GATEWAY_PASSKEY_HEADER = "gateway-passkey";
+
     private static ObjectMapper objectMapper = new ObjectMapper();
 
     @RequestMapping(value = "/login", method = POST)
     public ResponseEntity<AuthenticationAccount> doAuth(@RequestBody @Valid AccountCredential request) throws IOException {
-        AuthenticationAccount customer = customerAuthService.authenticateAccount(request);
+
+        AuthenticationAccount customer = customerAuthService.authenticateAccount(request, "");
 
         Token token = tokenService.allocateToken(objectMapper.writeValueAsString(customer));
         tokenService.verifyToken(token.getKey());
@@ -53,7 +57,7 @@ public class SecurityController {
     }
 
     @RequestMapping(value = "/user", method = GET)
-    public ResponseEntity<AuthenticationAccount> getCurrentUser() {
+    public ResponseEntity<AuthenticationAccount> getCurrentUser(HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         return ResponseEntity.status(HttpStatus.OK).body(customerAuthService.getAuthenticationAccountFromAccountService(auth.getName()));

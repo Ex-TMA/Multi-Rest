@@ -1,12 +1,15 @@
 package security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
 import security.model.AccountCredential;
 import security.model.AuthenticationAccount;
+
+import java.util.Arrays;
 
 /**
  * Created by nsonanh on 02/08/2017.
@@ -18,7 +21,7 @@ public class AccountAuthenticationService {
     private static final String ACCOUNT_URI = "http://localhost:8081/api/accounts";
     private PasswordEncoder encoder;
 
-    public AuthenticationAccount authenticateAccount(AccountCredential request) {
+    public AuthenticationAccount authenticateAccount(AccountCredential request, String gatewayPasskey) {
         AuthenticationAccount account = getAuthenticationAccountFromAccountService(request.getUserName());
 
         if (account == null) {
@@ -33,9 +36,18 @@ public class AccountAuthenticationService {
 
     public AuthenticationAccount getAuthenticationAccountFromAccountService(String userName) {
         RestTemplate restTemplateToAccount = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("gateway-passkey", "$2a$06$nnGtPHivmQRvBGtffykHAeUsRNoW9.wiUkYJgg8vIXZDQNVbHqfve");
+
+        HttpEntity<String> entity = new HttpEntity<String>("", headers);
+
         String exactURI = ACCOUNT_URI + "/search/findByUserName?userName=" + userName + "&projection=authenticateAccount";
-        AccountCredential resultAccount = restTemplateToAccount.getForObject(exactURI, AccountCredential.class);
-        return new AuthenticationAccount(resultAccount.getUserName(), resultAccount.getPass());
+        ResponseEntity<AccountCredential> respEntity = restTemplateToAccount.exchange(exactURI, HttpMethod.GET, entity, AccountCredential.class);
+
+        return new AuthenticationAccount(respEntity.getBody().getUserName(), respEntity.getBody().getPass());
     }
 
     private boolean matchPassword(String rawPass, String encodedPass) {
