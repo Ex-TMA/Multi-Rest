@@ -17,18 +17,16 @@ import java.util.Arrays;
  * Created by nsonanh on 02/08/2017.
  */
 public class AccountAuthenticationService {
-    @Autowired
-    SecurityProperties securityProperties;
-
-    @Autowired
-    private PasswordEncoder encoder;
 
     @Autowired
     private ConfigProperties configProperties;
 
+    @Autowired
+    private PasswordEncoder encoder;
+
     private static final String ACCOUNT_URI = "http://localhost:8081/api/accounts";
 
-    public AuthenticationAccount authenticateAccount(AccountCredential request, String gatewayPasskey) {
+    public AuthenticationAccount authenticateAccount(AccountCredential request) {
         AuthenticationAccount account = getAuthenticationAccountFromAccountService(request.getUserName());
 
         if (account == null) {

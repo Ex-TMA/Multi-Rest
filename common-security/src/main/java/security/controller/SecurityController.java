@@ -35,18 +35,16 @@ public class SecurityController {
     @Autowired
     private AccountAuthenticationService customerAuthService;
 
-    private static final String GATEWAY_PASSKEY_HEADER = "gateway-passkey";
-
     private static ObjectMapper objectMapper = new ObjectMapper();
 
     @RequestMapping(value = "/login", method = POST)
     public ResponseEntity<AuthenticationAccount> doAuth(@RequestBody @Valid AccountCredential request) throws IOException {
 
-        AuthenticationAccount customer = customerAuthService.authenticateAccount(request, "");
+        AuthenticationAccount customer = customerAuthService.authenticateAccount(request);
 
         Token token = tokenService.allocateToken(objectMapper.writeValueAsString(customer));
         tokenService.verifyToken(token.getKey());
-        return ResponseEntity.status(HttpStatus.OK).header("access-token", token.getKey())
+        return ResponseEntity.status(HttpStatus.OK).header(config.RequestHeader.ACCESS_TOKEN, token.getKey())
                 .body(customer);
     }
 

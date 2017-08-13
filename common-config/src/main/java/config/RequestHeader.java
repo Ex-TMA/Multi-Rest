@@ -7,4 +7,5 @@ public final class RequestHeader {
 
     public static final String GATEWAY_PASSKEY = "gateway-passkey";
 
+    public static final String ACCESS_TOKEN = "access-token";
 }
