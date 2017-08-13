@@ -1,5 +1,7 @@
 package security;
 
+import config.RequestHeader;
+import config.property.ConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -18,8 +20,13 @@ public class AccountAuthenticationService {
     @Autowired
     SecurityProperties securityProperties;
 
-    private static final String ACCOUNT_URI = "http://localhost:8081/api/accounts";
+    @Autowired
     private PasswordEncoder encoder;
+
+    @Autowired
+    private ConfigProperties configProperties;
+
+    private static final String ACCOUNT_URI = "http://localhost:8081/api/accounts";
 
     public AuthenticationAccount authenticateAccount(AccountCredential request, String gatewayPasskey) {
         AuthenticationAccount account = getAuthenticationAccountFromAccountService(request.getUserName());
@@ -40,7 +47,7 @@ public class AccountAuthenticationService {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("gateway-passkey", "$2a$06$nnGtPHivmQRvBGtffykHAeUsRNoW9.wiUkYJgg8vIXZDQNVbHqfve");
+        headers.set(RequestHeader.GATEWAY_PASSKEY, encoder.encode(configProperties.getGatewayPasskey()));
 
         HttpEntity<String> entity = new HttpEntity<String>("", headers);
 
@@ -51,17 +58,6 @@ public class AccountAuthenticationService {
     }
 
     private boolean matchPassword(String rawPass, String encodedPass) {
-        try {
-            // Encoder
-            Class<?> encoderClass = Class.forName(securityProperties.getEncryptionMethodClass());
-            encoder = (PasswordEncoder) encoderClass.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return encoder != null ? encoder.matches(rawPass, encodedPass) : false;
+        return encoder.matches(rawPass, encodedPass);
     }
 }
