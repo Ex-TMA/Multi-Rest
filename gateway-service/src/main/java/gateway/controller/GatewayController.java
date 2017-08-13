@@ -1,6 +1,6 @@
 package gateway.controller;
 
-import config.RequestHeader;
+import config.property.ConfigProperties;
 import gateway.config.ApiGatewayProperties;
 import gateway.transformer.ContentRequestTransformer;
 import gateway.transformer.HeadersRequestTransformer;
@@ -41,6 +41,9 @@ public class GatewayController {
   @Autowired
   private ApiGatewayProperties apiGatewayProperties;
 
+  @Autowired
+  private ConfigProperties configProperties;
+
   private HttpClient httpClient;
 
   @PostConstruct
@@ -73,7 +76,7 @@ public class GatewayController {
   private HttpUriRequest createHttpUriRequest(HttpServletRequest request) throws URISyntaxException, NoSuchRequestHandlingMethodException, IOException {
     URLRequestTransformer urlRequestTransformer = new URLRequestTransformer(apiGatewayProperties);
     ContentRequestTransformer contentRequestTransformer = new ContentRequestTransformer();
-    HeadersRequestTransformer headersRequestTransformer = new HeadersRequestTransformer();
+    HeadersRequestTransformer headersRequestTransformer = new HeadersRequestTransformer(configProperties);
     headersRequestTransformer.setPredecessor(contentRequestTransformer);
     contentRequestTransformer.setPredecessor(urlRequestTransformer);
 
