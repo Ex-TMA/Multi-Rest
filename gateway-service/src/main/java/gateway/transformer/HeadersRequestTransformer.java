@@ -13,7 +13,7 @@ import java.util.Enumeration;
 
 public class HeadersRequestTransformer extends ProxyRequestTransformer {
 
-  private String gatewayPasskeyContent;
+  private final String gatewayPasskeyContent;
 
   public HeadersRequestTransformer(ConfigProperties configProperties, PasswordEncoder encoder) {
     this.gatewayPasskeyContent = encoder.encode(configProperties.getGatewayPasskey());
