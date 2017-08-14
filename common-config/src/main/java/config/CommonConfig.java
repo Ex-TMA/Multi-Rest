@@ -36,7 +36,6 @@ public class CommonConfig {
 
     @Bean
     public PasswordEncoder encoder(ConfigProperties configProperties) throws Exception{
-        logger.debug(configProperties == null?"null roi": "hahaha");
         Class<?> encoderClass = Class.forName(configProperties.getEncoderClass());
         return (PasswordEncoder) encoderClass.newInstance();
     }

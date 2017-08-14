@@ -1,11 +1,13 @@
 package security;
 
+import config.CommonConfig;
 import config.property.ConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -29,14 +31,12 @@ import java.security.SecureRandom;
 @Configuration
 @ComponentScan
 @EnableWebSecurity
-@EnableConfigurationProperties({SecurityProperties.class, ConfigProperties.class})
+@EnableConfigurationProperties({SecurityProperties.class})
+@Import(CommonConfig.class)
 public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private SecurityProperties securityProperties;
-
-    @Autowired
-    private ConfigProperties configProperties;
 
     @Autowired
     private TokenAuthenticationService tokenAuthenticationService;
@@ -95,9 +95,4 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
         return res;
     }
 
-    @Bean
-    public PasswordEncoder encoder() throws Exception {
-        Class<?> encoderClass = Class.forName(configProperties.getEncoderClass());
-        return (PasswordEncoder) encoderClass.newInstance();
-    }
 }

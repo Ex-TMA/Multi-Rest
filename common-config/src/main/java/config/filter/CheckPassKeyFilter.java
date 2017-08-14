@@ -34,9 +34,14 @@ public class CheckPassKeyFilter extends GenericFilterBean {
         logger.info("Checking passkey");
         HttpServletRequest request = (HttpServletRequest)req;
         String passkey = request.getHeader(RequestHeader.GATEWAY_PASSKEY);
+        logger.info("URL request " + request.getRequestURL());
         logger.info("Gateway passkey " + passkey);
         logger.info("Config passkey " + configProperties.getGatewayPasskey());
-        if(utils.match(configProperties.getGatewayPasskey(), passkey)){
+        logger.info("Config passkey enabled " + configProperties.getCheckPasskeyEnabled());
+
+        Boolean passKeyEnabled = new Boolean(configProperties.getCheckPasskeyEnabled());
+        // Allow to go if passkey is not enabled or passkey match found
+        if(!passKeyEnabled || utils.match(configProperties.getGatewayPasskey(), passkey)){
             chain.doFilter(req, res);
         }
         else{

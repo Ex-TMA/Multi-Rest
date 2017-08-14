@@ -16,13 +16,9 @@ public class HeadersRequestTransformer extends ProxyRequestTransformer {
   private ConfigProperties configProperties;
   private PasswordEncoder encoder;
 
-  public HeadersRequestTransformer(ConfigProperties configProperties) {
+  public HeadersRequestTransformer(ConfigProperties configProperties, PasswordEncoder encoder) {
     this.configProperties = configProperties;
-    try {
-      encoder = encoder();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    this.encoder = encoder;
   }
 
   @Override
@@ -41,8 +37,4 @@ public class HeadersRequestTransformer extends ProxyRequestTransformer {
     return requestBuilder;
   }
 
-  public PasswordEncoder encoder() throws Exception {
-    Class<?> encoderClass = Class.forName(configProperties.getEncoderClass());
-    return (PasswordEncoder) encoderClass.newInstance();
-  }
 }

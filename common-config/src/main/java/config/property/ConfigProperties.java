@@ -10,12 +10,14 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "common.config")
-@PropertySource(("classpath:app-config.properties"))
+@PropertySource({"classpath:app-config.properties","classpath:app-config-override.properties" })
 public class ConfigProperties {
 
     private String encoderClass;
 
     private String gatewayPasskey;
+
+    private String checkPasskeyEnabled;
 
     public ConfigProperties() {
     }
@@ -34,5 +36,13 @@ public class ConfigProperties {
 
     public void setGatewayPasskey(String gatewayPasskey) {
         this.gatewayPasskey = gatewayPasskey;
+    }
+
+    public String getCheckPasskeyEnabled() {
+        return checkPasskeyEnabled;
+    }
+
+    public void setCheckPasskeyEnabled(String checkPasskeyEnabled) {
+        this.checkPasskeyEnabled = checkPasskeyEnabled;
     }
 }
