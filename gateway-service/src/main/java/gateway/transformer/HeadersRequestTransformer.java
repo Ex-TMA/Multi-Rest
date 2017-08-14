@@ -13,12 +13,10 @@ import java.util.Enumeration;
 
 public class HeadersRequestTransformer extends ProxyRequestTransformer {
 
-  private ConfigProperties configProperties;
-  private PasswordEncoder encoder;
+  private String gatewayPasskeyContent;
 
   public HeadersRequestTransformer(ConfigProperties configProperties, PasswordEncoder encoder) {
-    this.configProperties = configProperties;
-    this.encoder = encoder;
+    this.gatewayPasskeyContent = encoder.encode(configProperties.getGatewayPasskey());
   }
 
   @Override
@@ -33,7 +31,7 @@ public class HeadersRequestTransformer extends ProxyRequestTransformer {
         requestBuilder.addHeader(headerName, headerValue);
       }
     }
-    requestBuilder.addHeader(RequestHeader.GATEWAY_PASSKEY, encoder.encode(configProperties.getGatewayPasskey()));
+    requestBuilder.addHeader(RequestHeader.GATEWAY_PASSKEY, gatewayPasskeyContent);
     return requestBuilder;
   }
 

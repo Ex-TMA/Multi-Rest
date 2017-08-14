@@ -25,6 +25,10 @@ public class AccountAuthenticationService {
     private PasswordEncoder encoder;
 
     private static final String ACCOUNT_URI = "http://localhost:8081/api/accounts";
+    private static final String FIND_BY_USERNAME = "/search/findByUserName?userName=";
+    private static final String PROJECTION = "&projection=authenticateAccount";
+
+    private String gatewayPasskeyContent;
 
     public AuthenticationAccount authenticateAccount(AccountCredential request) {
         AuthenticationAccount account = getAuthenticationAccountFromAccountService(request.getUserName());
@@ -45,11 +49,11 @@ public class AccountAuthenticationService {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(RequestHeader.GATEWAY_PASSKEY, encoder.encode(configProperties.getGatewayPasskey()));
+        headers.set(RequestHeader.GATEWAY_PASSKEY, getGatewayPasskeyContent());
 
         HttpEntity<String> entity = new HttpEntity<String>("", headers);
 
-        String exactURI = ACCOUNT_URI + "/search/findByUserName?userName=" + userName + "&projection=authenticateAccount";
+        String exactURI = ACCOUNT_URI + FIND_BY_USERNAME + userName + PROJECTION;
         ResponseEntity<AccountCredential> respEntity = restTemplateToAccount.exchange(exactURI, HttpMethod.GET, entity, AccountCredential.class);
 
         return new AuthenticationAccount(respEntity.getBody().getUserName(), respEntity.getBody().getPass());
@@ -57,5 +61,12 @@ public class AccountAuthenticationService {
 
     private boolean matchPassword(String rawPass, String encodedPass) {
         return encoder.matches(rawPass, encodedPass);
+    }
+
+    private String getGatewayPasskeyContent() {
+        if (gatewayPasskeyContent == null) {
+            gatewayPasskeyContent = encoder.encode(configProperties.getGatewayPasskey());
+        }
+        return gatewayPasskeyContent;
     }
 }
