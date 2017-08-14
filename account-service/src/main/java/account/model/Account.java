@@ -1,9 +1,10 @@
 package account.model;
 
-import account.Utils;
 import com.google.common.collect.Lists;
+import config.property.Utils;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -33,12 +34,15 @@ public class Account extends BaseEntity{
     @JoinTable(name = "AccountAccess", joinColumns = { @JoinColumn(name = "accountId") }, inverseJoinColumns = { @JoinColumn(name = "accessId") })
     private List<Access> accesses;
 
+    @Autowired
+    @Transient
+    private Utils utils;
     protected Account() {
     }
 
     public Account(String userName, String pass, AccountState state, String name, String email) {
         this.userName = userName;
-        this.pass = Utils.encode(pass);
+        this.pass = utils.encode(pass);
         this.state = state;
         this.name = name;
         this.email = email;
@@ -58,7 +62,7 @@ public class Account extends BaseEntity{
     }
 
     public void setPass(String pass) {
-        this.pass = Utils.encode(pass);
+        this.pass = utils.encode(pass);
     }
 
     public AccountState getState() {

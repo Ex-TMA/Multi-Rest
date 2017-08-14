@@ -15,6 +15,7 @@ jar {
 }
 
 dependencies {
+    compile project(":common-config")
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-starter-data-rest")

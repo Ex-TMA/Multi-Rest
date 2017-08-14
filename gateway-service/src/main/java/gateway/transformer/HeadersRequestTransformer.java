@@ -1,6 +1,9 @@
 package gateway.transformer;
 
+import config.RequestHeader;
+import config.property.ConfigProperties;
 import org.apache.http.client.methods.RequestBuilder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.mvc.multiaction.NoSuchRequestHandlingMethodException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +12,12 @@ import java.net.URISyntaxException;
 import java.util.Enumeration;
 
 public class HeadersRequestTransformer extends ProxyRequestTransformer {
+
+  private final String gatewayPasskeyContent;
+
+  public HeadersRequestTransformer(ConfigProperties configProperties, PasswordEncoder encoder) {
+    this.gatewayPasskeyContent = encoder.encode(configProperties.getGatewayPasskey());
+  }
 
   @Override
   public RequestBuilder transform(HttpServletRequest request) throws NoSuchRequestHandlingMethodException, URISyntaxException, IOException {
@@ -22,7 +31,8 @@ public class HeadersRequestTransformer extends ProxyRequestTransformer {
         requestBuilder.addHeader(headerName, headerValue);
       }
     }
-
+    requestBuilder.addHeader(RequestHeader.GATEWAY_PASSKEY, gatewayPasskeyContent);
     return requestBuilder;
   }
+
 }

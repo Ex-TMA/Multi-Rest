@@ -1,6 +1,9 @@
 package security;
 
+import config.RequestHeader;
+import config.property.ConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,15 +11,24 @@ import org.springframework.web.client.RestTemplate;
 import security.model.AccountCredential;
 import security.model.AuthenticationAccount;
 
+import java.util.Arrays;
+
 /**
  * Created by nsonanh on 02/08/2017.
  */
 public class AccountAuthenticationService {
+
     @Autowired
-    SecurityProperties securityProperties;
+    private ConfigProperties configProperties;
+
+    @Autowired
+    private PasswordEncoder encoder;
 
     private static final String ACCOUNT_URI = "http://localhost:8081/api/accounts";
-    private PasswordEncoder encoder;
+    private static final String FIND_BY_USERNAME = "/search/findByUserName?userName=";
+    private static final String PROJECTION = "&projection=authenticateAccount";
+
+    private String gatewayPasskeyContent;
 
     public AuthenticationAccount authenticateAccount(AccountCredential request) {
         AuthenticationAccount account = getAuthenticationAccountFromAccountService(request.getUserName());
@@ -33,23 +45,28 @@ public class AccountAuthenticationService {
 
     public AuthenticationAccount getAuthenticationAccountFromAccountService(String userName) {
         RestTemplate restTemplateToAccount = new RestTemplate();
-        String exactURI = ACCOUNT_URI + "/search/findByUserName?userName=" + userName + "&projection=authenticateAccount";
-        AccountCredential resultAccount = restTemplateToAccount.getForObject(exactURI, AccountCredential.class);
-        return new AuthenticationAccount(resultAccount.getUserName(), resultAccount.getPass());
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set(RequestHeader.GATEWAY_PASSKEY, getGatewayPasskeyContent());
+
+        HttpEntity<String> entity = new HttpEntity<String>("", headers);
+
+        String exactURI = ACCOUNT_URI + FIND_BY_USERNAME + userName + PROJECTION;
+        ResponseEntity<AccountCredential> respEntity = restTemplateToAccount.exchange(exactURI, HttpMethod.GET, entity, AccountCredential.class);
+
+        return new AuthenticationAccount(respEntity.getBody().getUserName(), respEntity.getBody().getPass());
     }
 
     private boolean matchPassword(String rawPass, String encodedPass) {
-        try {
-            // Encoder
-            Class<?> encoderClass = Class.forName(securityProperties.getEncryptionMethodClass());
-            encoder = (PasswordEncoder) encoderClass.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        return encoder.matches(rawPass, encodedPass);
+    }
+
+    private String getGatewayPasskeyContent() {
+        if (gatewayPasskeyContent == null) {
+            gatewayPasskeyContent = encoder.encode(configProperties.getGatewayPasskey());
         }
-        return encoder != null ? encoder.matches(rawPass, encodedPass) : false;
+        return gatewayPasskeyContent;
     }
 }

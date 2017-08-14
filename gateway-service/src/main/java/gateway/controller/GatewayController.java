@@ -1,5 +1,6 @@
 package gateway.controller;
 
+import config.property.ConfigProperties;
 import gateway.config.ApiGatewayProperties;
 import gateway.transformer.ContentRequestTransformer;
 import gateway.transformer.HeadersRequestTransformer;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +41,12 @@ public class GatewayController {
 
   @Autowired
   private ApiGatewayProperties apiGatewayProperties;
+
+  @Autowired
+  private ConfigProperties configProperties;
+
+  @Autowired
+  private PasswordEncoder encoder;
 
   private HttpClient httpClient;
 
@@ -72,7 +80,7 @@ public class GatewayController {
   private HttpUriRequest createHttpUriRequest(HttpServletRequest request) throws URISyntaxException, NoSuchRequestHandlingMethodException, IOException {
     URLRequestTransformer urlRequestTransformer = new URLRequestTransformer(apiGatewayProperties);
     ContentRequestTransformer contentRequestTransformer = new ContentRequestTransformer();
-    HeadersRequestTransformer headersRequestTransformer = new HeadersRequestTransformer();
+    HeadersRequestTransformer headersRequestTransformer = new HeadersRequestTransformer(configProperties,encoder);
     headersRequestTransformer.setPredecessor(contentRequestTransformer);
     contentRequestTransformer.setPredecessor(urlRequestTransformer);
 
