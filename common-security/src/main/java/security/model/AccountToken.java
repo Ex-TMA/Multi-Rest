@@ -1,4 +1,4 @@
-package account.model;
+package security.model;
 
 import config.model.BaseEntity;
 import org.hibernate.validator.constraints.NotBlank;
@@ -23,17 +23,17 @@ public class AccountToken extends BaseEntity {
     private String ip;
     @Temporal(TemporalType.TIMESTAMP)
     private Date expiresAt;
-    @ManyToOne
-    private Account account;
+    @NotBlank
+    private String userName;
 
     protected AccountToken() {
     }
 
-    public AccountToken(String token, String ip, Date expiresAt, Account account) {
+    public AccountToken(String userName, String token, String ip, Date expiresAt) {
         this.token = token;
         this.ip = ip;
         this.expiresAt = expiresAt;
-        this.account = account;
+        this.userName = userName;
     }
 
     public Date getCreatedAt() {
@@ -64,13 +64,14 @@ public class AccountToken extends BaseEntity {
         this.expiresAt = expiresAt;
     }
 
-    public Account getAccount() {
-        return account;
+    public String getUserName() {
+        return userName;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
+
     @Override
     public String toString(){
         return String.format("AccountToken[id=%d, token=%s]",id, token);

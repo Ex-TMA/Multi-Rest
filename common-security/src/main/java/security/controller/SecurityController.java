@@ -14,6 +14,7 @@ import security.AccountAuthenticationService;
 import security.model.AccountCredential;
 import security.model.AuthenticationAccount;
 import security.model.ErrorResponse;
+import security.repository.AccountTokenRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -38,12 +39,14 @@ public class SecurityController {
     private static ObjectMapper objectMapper = new ObjectMapper();
 
     @RequestMapping(value = "/login", method = POST)
-    public ResponseEntity<AuthenticationAccount> doAuth(@RequestBody @Valid AccountCredential request) throws IOException {
+    public ResponseEntity<AuthenticationAccount> doAuth(HttpServletRequest servletRequest, @RequestBody @Valid AccountCredential request) throws IOException {
 
         AuthenticationAccount customer = customerAuthService.authenticateAccount(request);
 
         Token token = tokenService.allocateToken(objectMapper.writeValueAsString(customer));
         tokenService.verifyToken(token.getKey());
+        customerAuthService.saveAccountToken(customer.getUsername(),token.getKey(), servletRequest.getRemoteHost());
+
         return ResponseEntity.status(HttpStatus.OK).header(config.RequestHeader.ACCESS_TOKEN, token.getKey())
                 .body(customer);
     }

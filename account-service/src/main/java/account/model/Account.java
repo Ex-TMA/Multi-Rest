@@ -1,6 +1,7 @@
 package account.model;
 
 import com.google.common.collect.Lists;
+import config.model.BaseEntity;
 import config.property.Utils;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
@@ -14,7 +15,7 @@ import java.util.List;
  * Created by truongnguyen on 7/18/17.
  */
 @Entity
-public class Account extends BaseEntity{
+public class Account extends BaseEntity {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;

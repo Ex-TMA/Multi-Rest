@@ -1,8 +1,8 @@
 package security;
 
 import config.CommonConfig;
-import config.property.ConfigProperties;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,10 +18,10 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.token.KeyBasedPersistenceTokenService;
 import org.springframework.security.core.token.TokenService;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import security.filter.StatelessAuthenticationFilter;
 import security.model.AuthenticationAccount;
+import security.repository.AccountTokenRepository;
 
 import java.security.SecureRandom;
 
@@ -29,10 +29,11 @@ import java.security.SecureRandom;
  * Created by nsonanh on 02/08/2017.
  */
 @Configuration
+@Import(CommonConfig.class)
 @ComponentScan
+@EnableAutoConfiguration(exclude={})
 @EnableWebSecurity
 @EnableConfigurationProperties({SecurityProperties.class})
-@Import(CommonConfig.class)
 public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -56,11 +57,6 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
             return new org.springframework.security.core.userdetails.User(userName, account.getPassword(), true, true, true, true,
                     AuthorityUtils.createAuthorityList("USER"));
         };
-    }
-
-    @Bean
-    public AccountAuthenticationService accountAuthService() {
-        return new AccountAuthenticationService();
     }
 
     @Bean

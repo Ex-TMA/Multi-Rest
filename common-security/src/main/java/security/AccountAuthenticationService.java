@@ -2,27 +2,41 @@ package security;
 
 import config.RequestHeader;
 import config.property.ConfigProperties;
+import org.apache.tomcat.jni.Local;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import security.model.AccountCredential;
+import security.model.AccountToken;
 import security.model.AuthenticationAccount;
+import security.repository.AccountTokenRepository;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  * Created by nsonanh on 02/08/2017.
  */
+@Service
 public class AccountAuthenticationService {
 
+    private Logger logger = LoggerFactory.getLogger(AccountAuthenticationService.class);
     @Autowired
     private ConfigProperties configProperties;
 
     @Autowired
     private PasswordEncoder encoder;
+
+    @Autowired
+    private AccountTokenRepository accountTokenRepository;
 
     private static final String ACCOUNT_URI = "http://localhost:8081/api/accounts";
     private static final String FIND_BY_USERNAME = "/search/findByUserName?userName=";
@@ -59,6 +73,16 @@ public class AccountAuthenticationService {
         return new AuthenticationAccount(respEntity.getBody().getUserName(), respEntity.getBody().getPass());
     }
 
+    public void saveAccountToken(String userName, String token, String ip){
+        LocalDate expiresAt = LocalDate.now().plusDays(1);
+        AccountToken accountToken = new AccountToken(userName, token, ip, java.sql.Date.valueOf(expiresAt));
+        accountToken = accountTokenRepository.save(accountToken);
+        logger.info("Account save to DB - " + accountToken.toString());
+    }
+
+    public boolean isTokenAndIpFound(String token, String ip){
+        return accountTokenRepository.findByTokenAndIpAndExpiresAtAfter(token, ip, new Date()) != null;
+    }
     private boolean matchPassword(String rawPass, String encodedPass) {
         return encoder.matches(rawPass, encodedPass);
     }
