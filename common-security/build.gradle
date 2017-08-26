@@ -25,6 +25,7 @@ dependencies {
     compile("commons-lang:commons-lang:2.6")
     compile("com.fasterxml.jackson.core:jackson-databind:2.6.6")
     compile("com.fasterxml.jackson.core:jackson-core")
+    compile "org.flywaydb:flyway-core:4.2.0"
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 

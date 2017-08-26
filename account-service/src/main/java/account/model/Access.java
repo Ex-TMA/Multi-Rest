@@ -1,5 +1,7 @@
 package account.model;
 
+import config.model.BaseEntity;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;

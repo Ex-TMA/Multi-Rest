@@ -1,4 +1,4 @@
-package account.model;
+package config.model;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
