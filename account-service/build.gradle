@@ -18,7 +18,6 @@ dependencies {
     compile project(":common-config")
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-security")
-    compile("org.springframework.boot:spring-boot-starter-data-rest")
     compile 'org.springframework.data:spring-data-rest-hal-browser'
     compile group: 'com.google.guava', name: 'guava', version: '11.0.2'
     compile "org.flywaydb:flyway-core:4.2.0"

@@ -21,6 +21,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.boot:spring-boot-starter-data-rest")
     compile("mysql:mysql-connector-java")
     compile("javax.servlet:javax.servlet-api")
     testCompile('org.springframework.boot:spring-boot-starter-test')
