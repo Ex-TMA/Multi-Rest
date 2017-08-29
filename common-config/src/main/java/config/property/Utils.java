@@ -1,18 +1,12 @@
 package config.property;
 
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.codec.binary.Base32;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.util.Properties;
+import java.security.SecureRandom;
 
 /**
  * Created by truongnguyen on 7/23/17.
@@ -30,4 +24,9 @@ public class Utils {
         return encoder.matches(rawPass, encodedPass);
     }
 
+    public String generateSecret() {
+        byte [] buffer = new byte[10];
+        new SecureRandom().nextBytes(buffer);
+        return new String(new Base32().encode(buffer));
+    }
 }

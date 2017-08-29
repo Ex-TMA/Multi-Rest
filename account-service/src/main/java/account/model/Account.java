@@ -28,6 +28,8 @@ public class Account extends BaseEntity {
     private AccountState state;
     @NotBlank
     private String name;
+    @NotBlank
+    private String secret;
     @Email
     private String email;
 
@@ -46,6 +48,7 @@ public class Account extends BaseEntity {
         this.pass = utils.encode(pass);
         this.state = state;
         this.name = name;
+        this.secret = utils.generateSecret();
         this.email = email;
         this.accesses = Lists.newArrayList();
     }
@@ -88,6 +91,14 @@ public class Account extends BaseEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getSecret() {
+        return secret;
+    }
+
+    public void setSecret(String secret) {
+        this.secret = secret;
     }
 
     public void addAccess(Access access){

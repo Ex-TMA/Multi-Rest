@@ -5,6 +5,7 @@ CREATE TABLE Account (
   pass varchar(60) DEFAULT NULL,
   state varchar(50) NOT NULL,
   name varchar(50) NOT NULL,
+  secret varchar(200) NOT NULL,
   email varchar(50) DEFAULT NULL,
   PRIMARY KEY (id),
   UNIQUE KEY userName (userName),
@@ -45,7 +46,7 @@ CREATE TABLE AccountToken (
 # Raw password for Account here is password
 INSERT INTO Access SET access = 'ADMIN';
 INSERT INTO Access SET access = 'USER';
-INSERT INTO Account SET userName = 'truong1', pass='$2a$06$GWCw1AsaWE83shb9WjwTeuKWzsUERLr0CruAaik7yPknqaSzqHo4u', state='ACTIVE', name='truong admin', email='truongnguyen1610@gmail.com';
-INSERT INTO Account SET userName = 'truong2', pass='$2a$06$d/5Yw6WKsS3YQETtmcGFz.heTtGHVzFkqGQDiMRA58ywkE016fG8K', state='ACTIVE', name='truong user', email='truongnguyen1611@gmail.com';
+INSERT INTO Account SET userName = 'truong1', pass='$2a$06$GWCw1AsaWE83shb9WjwTeuKWzsUERLr0CruAaik7yPknqaSzqHo4u', state='ACTIVE', name='truong admin', secret='yu44 4m7a x6vq 7kve htza mpzl jt6o wejx', email='truongnguyen1610@gmail.com';
+INSERT INTO Account SET userName = 'truong2', pass='$2a$06$d/5Yw6WKsS3YQETtmcGFz.heTtGHVzFkqGQDiMRA58ywkE016fG8K', state='ACTIVE', name='truong user', secret='yu44 4m7a x6vq 7kve htza mpzl jt6o wejx', email='truongnguyen1611@gmail.com';
 INSERT INTO AccountAccess set accountId = 1, accessId = 1;
 INSERT INTO AccountAccess set accountId = 2, accessId = 2;

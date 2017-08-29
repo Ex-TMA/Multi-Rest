@@ -10,4 +10,5 @@ import org.springframework.data.rest.core.config.Projection;
 public interface AccountAuthenticationProjection {
     String getUserName();
     String getPass();
+    String getSecret();
 }

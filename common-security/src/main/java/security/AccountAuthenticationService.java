@@ -2,7 +2,7 @@ package security;
 
 import config.RequestHeader;
 import config.property.ConfigProperties;
-import org.apache.tomcat.jni.Local;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,13 +12,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import security.exception.MissingTOTPKeyAuthenticatorException;
 import security.model.AccountCredential;
 import security.model.AccountToken;
 import security.model.AuthenticationAccount;
 import security.repository.AccountTokenRepository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -29,6 +29,7 @@ import java.util.Date;
 public class AccountAuthenticationService {
 
     private Logger logger = LoggerFactory.getLogger(AccountAuthenticationService.class);
+
     @Autowired
     private ConfigProperties configProperties;
 
@@ -70,7 +71,7 @@ public class AccountAuthenticationService {
         String exactURI = ACCOUNT_URI + FIND_BY_USERNAME + userName + PROJECTION;
         ResponseEntity<AccountCredential> respEntity = restTemplateToAccount.exchange(exactURI, HttpMethod.GET, entity, AccountCredential.class);
 
-        return new AuthenticationAccount(respEntity.getBody().getUserName(), respEntity.getBody().getPass());
+        return new AuthenticationAccount(respEntity.getBody().getUserName(), respEntity.getBody().getPass(), respEntity.getBody().getSecret());
     }
 
     public void saveAccountToken(String userName, String token, String ip){
@@ -92,5 +93,23 @@ public class AccountAuthenticationService {
             gatewayPasskeyContent = encoder.encode(configProperties.getGatewayPasskey());
         }
         return gatewayPasskeyContent;
+    }
+
+    public String generateOTPProtocol(AccountCredential request) {
+        AuthenticationAccount account = getAuthenticationAccountFromAccountService(request.getUserName());
+
+        if (account == null) {
+            throw new UsernameNotFoundException("Username not found");
+        }
+
+        if (!matchPassword(request.getPass(), account.getPassword())) {
+            throw new AuthenticationCredentialsNotFoundException("Authentication failed");
+        }
+
+        if (StringUtils.isEmpty(account.getSecret())) {
+            throw new MissingTOTPKeyAuthenticatorException("No secret key provided");
+        }
+        return String.format("otpauth://totp/%s:%s?secret=%s&issuer=SpringBootTOTP", account.getUsername()
+                , account.getUsername() + "@domain.com", account.getSecret());
     }
 }
