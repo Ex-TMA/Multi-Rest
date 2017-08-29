@@ -44,6 +44,7 @@ public class AuthenticationAccount implements UserDetails {
         this.username = username;
     }
 
+    @JsonIgnore
     public String getSecret() {
         return secret;
     }

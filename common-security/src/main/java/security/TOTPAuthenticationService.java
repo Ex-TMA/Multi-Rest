@@ -32,7 +32,7 @@ public class TOTPAuthenticationService {
             Integer totpKey = request.getTotpKey();
             if (totpKey != null) {
                 try {
-                    if (!totpAuthenticator.verifyCode(secret, totpKey, 10)) {
+                    if (!totpAuthenticator.verifyCode(secret, totpKey, 2)) {
                         logger.info("Code {} was not valid", totpKey);
                         System.out.printf("Code %d was not valid", totpKey);
                         throw new BadCredentialsException(
