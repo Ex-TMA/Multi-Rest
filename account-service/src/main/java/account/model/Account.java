@@ -1,5 +1,6 @@
 package account.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.google.common.collect.Lists;
 import config.model.BaseEntity;
 import config.property.Utils;
@@ -23,12 +24,14 @@ public class Account extends BaseEntity {
     @NotBlank
     private String userName;
     @NotBlank
+    @JsonIgnore
     private String pass;
     @Enumerated(EnumType.STRING)
     private AccountState state;
     @NotBlank
     private String name;
     @NotBlank
+    @JsonIgnore
     private String secret;
     @Email
     private String email;
