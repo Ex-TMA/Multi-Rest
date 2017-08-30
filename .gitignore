@@ -1,5 +1,6 @@
 # Ignore build content
 build/
+*/out/*
 
 # Ignore .idea content
 .idea/

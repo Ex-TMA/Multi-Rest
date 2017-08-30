@@ -20,6 +20,8 @@ public class AuthenticationAccount implements UserDetails {
 
     private String pass;
 
+    private String secret;
+
     public AuthenticationAccount() {
     }
 
@@ -32,8 +34,19 @@ public class AuthenticationAccount implements UserDetails {
         this.pass = pass;
     }
 
+    public AuthenticationAccount(String username, String pass, String secret) {
+        this.username = username;
+        this.pass = pass;
+        this.secret = secret;
+    }
+
     public void setUserName(String username) {
         this.username = username;
+    }
+
+    @JsonIgnore
+    public String getSecret() {
+        return secret;
     }
 
     @Override

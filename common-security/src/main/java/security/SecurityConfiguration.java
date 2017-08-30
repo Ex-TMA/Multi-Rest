@@ -21,7 +21,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import security.filter.StatelessAuthenticationFilter;
 import security.model.AuthenticationAccount;
-import security.repository.AccountTokenRepository;
 
 import java.security.SecureRandom;
 
@@ -44,6 +43,9 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
 
     @Autowired
     AccountAuthenticationService accountAuthenticationService;
+
+    @Autowired
+    private TOTPAuthenticationService totpAuthenticationService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -74,7 +76,7 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST,"/api/login").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/login", "/api/qrcode").permitAll()
                 .antMatchers("/api/**").authenticated()
                 .anyRequest().permitAll()
                 .and()
@@ -91,4 +93,8 @@ public class SecurityConfiguration  extends WebSecurityConfigurerAdapter {
         return res;
     }
 
+    @Bean
+    public TOTPAuthenticationService totpAuthenticationService() {
+        return new TOTPAuthenticationService();
+    }
 }
