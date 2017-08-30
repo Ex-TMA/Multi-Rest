@@ -109,7 +109,6 @@ public class AccountAuthenticationService {
         if (StringUtils.isEmpty(account.getSecret())) {
             throw new MissingTOTPKeyAuthenticatorException("No secret key provided");
         }
-        return String.format("otpauth://totp/%s:%s?secret=%s&issuer=SpringBootTOTP", account.getUsername()
-                , account.getUsername() + "@domain.com", account.getSecret());
+        return String.format("otpauth://totp/%s?secret=%s&issuer=SpringBootTOTP", account.getUsername(), account.getSecret());
     }
 }

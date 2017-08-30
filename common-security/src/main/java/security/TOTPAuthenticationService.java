@@ -30,7 +30,7 @@ public class TOTPAuthenticationService {
 
         if (StringUtils.hasText(secret)) {
             Integer totpKey = request.getTotpKey();
-            if (totpKey != null) {
+            if (totpKey != null && totpKey != 0) {
                 try {
                     if (!totpAuthenticator.verifyCode(secret, totpKey, 2)) {
                         logger.info("Code {} was not valid", totpKey);

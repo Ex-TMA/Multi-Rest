@@ -9,18 +9,24 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.token.Token;
 import org.springframework.security.core.token.TokenService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import security.AccountAuthenticationService;
 import security.TOTPAuthenticationService;
+import security.exception.MissingTOTPKeyAuthenticatorException;
 import security.model.AccountCredential;
 import security.model.AuthenticationAccount;
 import security.model.ErrorResponse;
 
+import javax.security.auth.login.CredentialExpiredException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -62,12 +68,6 @@ public class SecurityController {
                 .body(customer);
     }
 
-    @ResponseStatus(value = HttpStatus.NOT_FOUND)
-    @ExceptionHandler({Exception.class})
-    public ErrorResponse customersNotFound() {
-        return new ErrorResponse("Customer not found");
-    }
-
     @RequestMapping(value = "/user", method = GET)
     public ResponseEntity<AuthenticationAccount> getCurrentUser(HttpServletRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -83,5 +83,41 @@ public class SecurityController {
         BitMatrix matrix = writer.encode(otpProtocol, BarcodeFormat.QR_CODE, 250, 250);
         MatrixToImageWriter.writeToStream(matrix, "PNG", response.getOutputStream());
         response.getOutputStream().flush();
+    }
+
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({UsernameNotFoundException.class})
+    public ErrorResponse userNameNotFound() {
+        return new ErrorResponse("Username not found");
+    }
+
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ExceptionHandler({AuthenticationException.class})
+    public ErrorResponse authenticationFailed() {
+        return new ErrorResponse("Authentication failed");
+    }
+
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler({CredentialExpiredException.class})
+    public ErrorResponse credentialExpired() {
+        return new ErrorResponse("User credentials expired");
+    }
+
+    @ResponseStatus(value = HttpStatus.UNAUTHORIZED)
+    @ExceptionHandler({BadCredentialsException.class})
+    public ErrorResponse badCredentials() {
+        return new ErrorResponse("Bad credentials provided");
+    }
+
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler({IOException.class, InternalAuthenticationServiceException.class})
+    public ErrorResponse internalAuthenticationException() {
+        return new ErrorResponse("TOTP code verification failed");
+    }
+
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({MissingTOTPKeyAuthenticatorException.class})
+    public ErrorResponse missingTOTPCode() {
+        return new ErrorResponse("TOTP code is mandatory");
     }
 }
