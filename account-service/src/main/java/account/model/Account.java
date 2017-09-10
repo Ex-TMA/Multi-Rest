@@ -1,6 +1,7 @@
 package account.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import config.model.BaseEntity;
 import config.property.Utils;
@@ -46,7 +47,18 @@ public class Account extends BaseEntity {
     protected Account() {
     }
 
+    @VisibleForTesting
+    protected Account(Utils utils, String userName, String pass, AccountState state, String name, String email){
+        this.utils = utils;
+        //TODO: apply builder
+        create(userName,pass,state,name,email);
+
+    }
     public Account(String userName, String pass, AccountState state, String name, String email) {
+        create(userName,pass,state,name,email);
+    }
+
+    private void create(String userName, String pass, AccountState state, String name, String email){
         this.userName = userName;
         this.pass = utils.encode(pass);
         this.state = state;

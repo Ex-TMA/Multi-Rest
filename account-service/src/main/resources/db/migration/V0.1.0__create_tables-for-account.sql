@@ -29,20 +29,6 @@ CREATE TABLE AccountAccess (
   CONSTRAINT AccountAccess_ibfk_2 FOREIGN KEY (accessId) REFERENCES Access (id)
 ) ENGINE=InnoDB;
 
-CREATE TABLE AccountToken (
-  createdAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  id int(11) NOT NULL AUTO_INCREMENT,
-  accountId int(11) NOT NULL,
-  token varchar(64) NOT NULL,
-  ip varchar(100) DEFAULT NULL,
-  expiresAt timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (id),
-  UNIQUE KEY token (token),
-  KEY accountId (accountId),
-  KEY createdAt (createdAt),
-  CONSTRAINT AccountToken_ibfk_1 FOREIGN KEY (accountId) REFERENCES Account (id)
-) ENGINE=InnoDB;
-
 # Raw password for Account here is password
 INSERT INTO Access SET access = 'ADMIN';
 INSERT INTO Access SET access = 'USER';

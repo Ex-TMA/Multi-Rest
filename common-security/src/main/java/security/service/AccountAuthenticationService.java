@@ -1,4 +1,4 @@
-package security;
+package security.service;
 
 import config.RequestHeader;
 import config.property.ConfigProperties;
@@ -6,11 +6,13 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 import security.exception.MissingTOTPKeyAuthenticatorException;
 import security.model.AccountCredential;
@@ -30,21 +32,27 @@ public class AccountAuthenticationService {
 
     private Logger logger = LoggerFactory.getLogger(AccountAuthenticationService.class);
 
-    @Autowired
     private ConfigProperties configProperties;
 
-    @Autowired
     private PasswordEncoder encoder;
 
-    @Autowired
     private AccountTokenRepository accountTokenRepository;
 
-    private static final String ACCOUNT_URI = "http://localhost:8081/api/accounts";
-    private static final String FIND_BY_USERNAME = "/search/findByUserName?userName=";
-    private static final String PROJECTION = "&projection=authenticateAccount";
+    RestTemplate restTemplateToAccount = null;
+
+    public static final String ACCOUNT_URI = "http://localhost:8081/api/accounts";
+    public static final String FIND_BY_USERNAME = "/search/findByUserName?userName=";
+    public static final String PROJECTION = "&projection=authenticateAccount";
 
     private String gatewayPasskeyContent;
 
+    @Autowired
+    public AccountAuthenticationService(ConfigProperties configProperties, PasswordEncoder encoder, AccountTokenRepository accountTokenRepository, RestTemplateBuilder restTemplateBuilder){
+        this.configProperties = configProperties;
+        this.encoder = encoder;
+        this.accountTokenRepository = accountTokenRepository;
+        this.restTemplateToAccount = restTemplateBuilder.build();
+    }
     public AuthenticationAccount authenticateAccount(AccountCredential request) {
         AuthenticationAccount account = getAuthenticationAccountFromAccountService(request.getUserName());
 
@@ -59,8 +67,6 @@ public class AccountAuthenticationService {
     }
 
     public AuthenticationAccount getAuthenticationAccountFromAccountService(String userName) {
-        RestTemplate restTemplateToAccount = new RestTemplate();
-
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -69,9 +75,14 @@ public class AccountAuthenticationService {
         HttpEntity<String> entity = new HttpEntity<String>("", headers);
 
         String exactURI = ACCOUNT_URI + FIND_BY_USERNAME + userName + PROJECTION;
-        ResponseEntity<AccountCredential> respEntity = restTemplateToAccount.exchange(exactURI, HttpMethod.GET, entity, AccountCredential.class);
-
-        return new AuthenticationAccount(respEntity.getBody().getUserName(), respEntity.getBody().getPass(), respEntity.getBody().getSecret());
+        try{
+            ResponseEntity<AccountCredential> respEntity = restTemplateToAccount.exchange(exactURI, HttpMethod.GET, entity, AccountCredential.class);
+            return new AuthenticationAccount(respEntity.getBody().getUserName(), respEntity.getBody().getPass(), respEntity.getBody().getSecret());
+        }
+        catch (RestClientResponseException ex){
+            logger.warn("RestClientException status: %s, reason: %s", ex.getRawStatusCode(), ex.getStatusText());
+        }
+        return null;
     }
 
     public void saveAccountToken(String userName, String token, String ip){

@@ -21,6 +21,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import security.filter.StatelessAuthenticationFilter;
 import security.model.AuthenticationAccount;
+import security.service.AccountAuthenticationService;
+import security.service.TOTPAuthenticationService;
+import security.service.TokenAuthenticationService;
 
 import java.security.SecureRandom;
 
