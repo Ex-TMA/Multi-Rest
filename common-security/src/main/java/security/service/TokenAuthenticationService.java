@@ -31,6 +31,12 @@ public class TokenAuthenticationService {
 
     private ObjectMapper mapper = new ObjectMapper();
 
+    @Autowired
+    public TokenAuthenticationService(TokenService tokenService, AccountAuthenticationService accountAuthenticationService){
+        this.tokenService = tokenService;
+        this.accountAuthenticationService = accountAuthenticationService;
+    }
+
     public void setTokenService(TokenService tokenService) {
         this.tokenService = tokenService;
     }
