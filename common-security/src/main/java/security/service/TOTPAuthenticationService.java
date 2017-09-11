@@ -25,7 +25,7 @@ public class TOTPAuthenticationService {
         totpAuthenticator = new TOTPAuthenticator();
     }
 
-    public void authenticateTOTPUser(AccountCredential request, AuthenticationAccount account) {
+    public void authenticateTOTPUser(AccountCredential request, AuthenticationAccount account) throws Exception {
         String secret = account.getSecret();
 
         if (StringUtils.hasText(secret)) {

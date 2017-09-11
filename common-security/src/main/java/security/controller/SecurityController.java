@@ -54,7 +54,7 @@ public class SecurityController {
     private static ObjectMapper objectMapper = new ObjectMapper();
 
     @RequestMapping(value = "/login", method = POST)
-    public ResponseEntity<AuthenticationAccount> doAuth(HttpServletRequest servletRequest, @RequestBody @Valid AccountCredential request) throws IOException {
+    public ResponseEntity<AuthenticationAccount> doAuth(HttpServletRequest servletRequest, @RequestBody @Valid AccountCredential request) throws Exception {
 
         AuthenticationAccount customer = customerAuthService.authenticateAccount(request);
 
