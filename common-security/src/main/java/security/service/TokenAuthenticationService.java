@@ -1,6 +1,7 @@
 package security.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,10 @@ public class TokenAuthenticationService {
 
     private ObjectMapper mapper = new ObjectMapper();
 
-    @Autowired
-    public TokenAuthenticationService(TokenService tokenService, AccountAuthenticationService accountAuthenticationService){
+    public TokenAuthenticationService(){}
+
+    @VisibleForTesting
+    protected TokenAuthenticationService(TokenService tokenService, AccountAuthenticationService accountAuthenticationService){
         this.tokenService = tokenService;
         this.accountAuthenticationService = accountAuthenticationService;
     }
